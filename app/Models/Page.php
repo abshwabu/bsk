@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Navigation;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -38,6 +39,14 @@ class Page extends Model
                     ->where('is_home', true)
                     ->update(['is_home' => false]);
             }
+        });
+
+        static::saved(function () {
+            Navigation::flushCache();
+        });
+
+        static::deleted(function () {
+            Navigation::flushCache();
         });
     }
 

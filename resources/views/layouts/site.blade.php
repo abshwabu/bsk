@@ -1,6 +1,7 @@
 @props([
     'header' => null,
     'footer' => null,
+    'title' => null,
 ])
 
 <!DOCTYPE html>
@@ -43,18 +44,22 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>
-<body class="min-h-screen bg-white text-slate-900 antialiased font-body">
-    <header>
+<body class="flex min-h-screen flex-col bg-white text-slate-900 antialiased font-body">
+    @if ($header !== null)
         {{ $header }}
-    </header>
+    @else
+        <x-site-header />
+    @endif
 
-    <main>
+    <main class="flex-1">
         {{ $slot }}
     </main>
 
-    <footer>
+    @if ($footer !== null)
         {{ $footer }}
-    </footer>
+    @else
+        <x-site-footer />
+    @endif
 
     @stack('scripts')
 </body>

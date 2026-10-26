@@ -114,10 +114,31 @@ class SiteSettings extends Page implements HasForms
                                             ])
                                             ->searchable(),
                                     ]),
+                                Repeater::make('extra_nav_links')
+                                    ->label('Additional Navigation Links')
+                                    ->helperText('Custom external or specific internal links to include in the site navigation.')
+                                    ->schema([
+                                        TextInput::make('label')
+                                            ->label('Link Label')
+                                            ->required(),
+                                        TextInput::make('url')
+                                            ->label('Target URL')
+                                            ->required(),
+                                        Toggle::make('open_in_new_tab')
+                                            ->label('Open in new tab')
+                                            ->default(false),
+                                    ])
+                                    ->columns(3)
+                                    ->defaultItems(0)
+                                    ->collapsible()
+                                    ->reorderable(),
                                 Textarea::make('footer_text')
                                     ->label('Footer Text')
                                     ->rows(2)
                                     ->maxLength(500),
+                                Toggle::make('show_powered_by')
+                                    ->label('Display "Powered by" branding line in footer')
+                                    ->default(true),
                             ]),
 
                         Tab::make('Contact')

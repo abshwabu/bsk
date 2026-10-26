@@ -54,6 +54,10 @@ class PageResource extends Resource
                                     TextInput::make('slug')
                                         ->required()
                                         ->unique(Page::class, 'slug', ignoreRecord: true)
+                                        ->notIn(['admin', 'storage', 'sitemap.xml', 'robots.txt', 'inquiry', 'shop', 'projects'])
+                                        ->validationMessages([
+                                            'not_in' => 'The slug ":input" is reserved by the system and cannot be used.',
+                                        ])
                                         ->maxLength(255),
                                 ])
                                 ->columns(2),

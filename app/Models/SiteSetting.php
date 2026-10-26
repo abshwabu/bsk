@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Navigation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -26,6 +27,8 @@ class SiteSetting extends Model
     {
         return [
             'social_links' => 'array',
+            'extra_nav_links' => 'array',
+            'show_powered_by' => 'boolean',
             'enabled_modules' => 'array',
             'telegram_bot_token' => 'encrypted',
         ];
@@ -35,10 +38,12 @@ class SiteSetting extends Model
     {
         static::saved(function () {
             static::flushCache();
+            Navigation::flushCache();
         });
 
         static::deleted(function () {
             static::flushCache();
+            Navigation::flushCache();
         });
     }
 
@@ -101,7 +106,9 @@ class SiteSetting extends Model
                 ['platform' => 'github', 'url' => 'https://github.com'],
                 ['platform' => 'twitter', 'url' => 'https://x.com'],
             ],
+            'extra_nav_links' => [],
             'footer_text' => '© '.date('Y').' '.$appName.'. All rights reserved.',
+            'show_powered_by' => true,
             'analytics_id' => null,
             'telegram_bot_token' => null,
             'telegram_chat_id' => null,
