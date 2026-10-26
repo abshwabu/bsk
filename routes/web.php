@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\InquiryController;
+use App\Http\Controllers\ShopController;
 use App\Models\Page;
 use App\Models\Project;
 use App\Models\ProjectCategory;
@@ -102,6 +104,28 @@ Route::post('/inquiry', [InquiryController::class, 'store'])
     ->middleware('throttle:5,60')
     ->name('inquiry.store');
 
+// Catalog / Shop routes (guarded by enabled_modules.catalog inside controller)
+Route::prefix('shop')->name('shop.')->group(function () {
+    Route::get('/', [ShopController::class, 'index'])->name('index');
+    Route::get('/{slug}', [ShopController::class, 'show'])->name('show');
+});
+
+// Cart routes
+Route::prefix('cart')->name('cart.')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('index');
+    Route::post('/add', [CartController::class, 'add'])->name('add');
+    Route::post('/update', [CartController::class, 'update'])->name('update');
+    Route::post('/remove/{productId}', [CartController::class, 'remove'])->name('remove');
+    Route::post('/clear', [CartController::class, 'clear'])->name('clear');
+});
+
+// Checkout routes
+Route::get('/checkout', [ShopController::class, 'checkout'])->name('shop.checkout');
+Route::post('/checkout', [ShopController::class, 'submitCheckout'])
+    ->middleware('throttle:5,60')
+    ->name('shop.checkout.submit');
+Route::get('/order-confirmed/{reference}', [ShopController::class, 'orderConfirmed'])->name('shop.order-confirmed');
+
 // Dynamic CMS page route
 Route::get('/{slug}', function (string $slug) use ($canPreviewUnpublished) {
     $canPreview = $canPreviewUnpublished();
@@ -117,4 +141,4 @@ Route::get('/{slug}', function (string $slug) use ($canPreviewUnpublished) {
     }
 
     return view('page', ['page' => $page]);
-})->where('slug', '^(?!admin|storage|sitemap\.xml|robots\.txt|inquiry|shop|projects$).*')->name('pages.show');
+})->where('slug', '^(?!admin|storage|sitemap\.xml|robots\.txt|inquiry|shop|projects|cart|checkout|order-confirmed$).*')->name('pages.show');

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Inquiry;
+use App\Models\OrderRequest;
 use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -95,6 +96,46 @@ class TelegramNotifier
             ."🌐 <b>Source:</b> {$source}\n\n"
             ."💬 <b>Message:</b>\n{$messagePreview}\n\n"
             ."🔗 <a href=\"{$adminUrl}\">View in Admin Panel</a>";
+
+        return $this->send($text);
+    }
+
+    /**
+     * Send formatted new order request notification.
+     */
+    public function sendOrderRequest(OrderRequest $order): bool
+    {
+        $siteName = self::escape(site('site_name') ?? config('app.name', 'Bina Site Kit'));
+        $customer = self::escape($order->customer_name);
+        $phone = self::escape($order->phone);
+        $email = $order->email ? self::escape($order->email) : '<i>Not provided</i>';
+        $address = $order->address ? self::escape($order->address) : '<i>Not provided</i>';
+        $notes = $order->notes ? self::escape($order->notes) : '<i>None</i>';
+        $currency = self::escape($order->currency ?: 'USD');
+        $total = number_format((float) $order->total, 2);
+        $ref = self::escape($order->reference);
+
+        $itemsList = '';
+        foreach ($order->items ?? [] as $item) {
+            $itemName = self::escape($item['name'] ?? 'Item');
+            $qty = (int) ($item['qty'] ?? 1);
+            $price = number_format((float) ($item['price'] ?? 0), 2);
+            $subtotal = number_format((float) ($item['subtotal'] ?? ($price * $qty)), 2);
+            $itemsList .= " • {$itemName} × {$qty} ({$currency} {$price}) = <b>{$currency} {$subtotal}</b>\n";
+        }
+
+        $adminUrl = url('/admin/order-requests/'.$order->id);
+
+        $text = "🛍️ <b>New Order Request on {$siteName}</b>\n"
+            ."🔖 <b>Reference:</b> <code>{$ref}</code>\n\n"
+            ."👤 <b>Customer:</b> {$customer}\n"
+            ."📞 <b>Phone:</b> {$phone}\n"
+            ."📧 <b>Email:</b> {$email}\n"
+            ."📍 <b>Address:</b> {$address}\n"
+            ."📝 <b>Notes:</b> {$notes}\n\n"
+            ."📦 <b>Ordered Items:</b>\n{$itemsList}\n"
+            ."💰 <b>Total Amount:</b> <b>{$currency} {$total}</b>\n\n"
+            ."🔗 <a href=\"{$adminUrl}\">View & Manage in Admin Panel</a>";
 
         return $this->send($text);
     }

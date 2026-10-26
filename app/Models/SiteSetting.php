@@ -96,6 +96,7 @@ class SiteSetting extends Model
             'favicon' => null,
             'primary_color' => '#0f172a',
             'accent_color' => '#3b82f6',
+            'currency' => 'USD',
             'font_heading' => 'Inter',
             'font_body' => 'Inter',
             'phone' => '+15550000000',

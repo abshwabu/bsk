@@ -54,7 +54,7 @@ class PageResource extends Resource
                                     TextInput::make('slug')
                                         ->required()
                                         ->unique(Page::class, 'slug', ignoreRecord: true)
-                                        ->notIn(['admin', 'storage', 'sitemap.xml', 'robots.txt', 'inquiry', 'shop', 'projects'])
+                                        ->notIn(['admin', 'storage', 'sitemap.xml', 'robots.txt', 'inquiry', 'shop', 'projects', 'cart', 'checkout', 'order-confirmed'])
                                         ->validationMessages([
                                             'not_in' => 'The slug ":input" is reserved by the system and cannot be used.',
                                         ])

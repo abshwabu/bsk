@@ -232,6 +232,12 @@ class SiteSettings extends Page implements HasForms
                                         Toggle::make('enabled_modules.catalog')
                                             ->label('Catalog Module')
                                             ->helperText('Enable product catalog or services listings.'),
+                                        TextInput::make('currency')
+                                            ->label('Store Currency Code')
+                                            ->placeholder('USD')
+                                            ->default('USD')
+                                            ->maxLength(10)
+                                            ->helperText('Default currency code for products and order checkout (e.g. USD, EUR, GBP, KES).'),
                                     ]),
                             ]),
                     ]),
