@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\InquiryController;
+use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\SeoController;
 use App\Http\Controllers\ShopController;
 use App\Models\Page;
@@ -131,6 +132,12 @@ Route::get('/order-confirmed/{reference}', [ShopController::class, 'orderConfirm
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
 
+// Web-triggerable maintenance routes (guarded by token and env flag)
+Route::prefix('_bina/{token}')->middleware('throttle:10,1')->group(function () {
+    Route::get('/cache-clear', [MaintenanceController::class, 'cacheClear'])->name('bina.maintenance.cache-clear');
+    Route::get('/migrate', [MaintenanceController::class, 'migrate'])->name('bina.maintenance.migrate');
+});
+
 // Dynamic CMS page route
 Route::get('/{slug}', function (string $slug) use ($canPreviewUnpublished) {
     $canPreview = $canPreviewUnpublished();
@@ -146,4 +153,4 @@ Route::get('/{slug}', function (string $slug) use ($canPreviewUnpublished) {
     }
 
     return view('page', ['page' => $page]);
-})->where('slug', '^(?!admin|storage|sitemap\.xml|robots\.txt|inquiry|shop|projects|cart|checkout|order-confirmed$).*')->name('pages.show');
+})->where('slug', '^(?!admin|_bina|storage|sitemap\.xml|robots\.txt|inquiry|shop|projects|cart|checkout|order-confirmed$).*')->name('pages.show');
