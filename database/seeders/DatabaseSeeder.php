@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SuperAdminSeeder::class,
             SiteSettingSeeder::class,
+            PageSeeder::class,
         ]);
     }
 }

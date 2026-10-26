@@ -20,9 +20,9 @@ it('auto-discovers page blocks implementing the PageBlock interface', function (
         ->and(BlockRegistry::getView('rich_text'))->toBe('blocks.rich-text');
 
     $allSchemas = BlockRegistry::all();
-    expect($allSchemas)->toHaveCount(1)
-        ->and($allSchemas[0])->toBeInstanceOf(Block::class)
-        ->and($allSchemas[0]->getName())->toBe('rich_text');
+    expect($allSchemas)->toHaveCount(9)
+        ->and($allSchemas)->each->toBeInstanceOf(Block::class)
+        ->and(collect($allSchemas)->map(fn (Block $b) => $b->getName()))->toContain('rich_text');
 });
 
 it('enforces that only one page may have is_home = true', function () {
