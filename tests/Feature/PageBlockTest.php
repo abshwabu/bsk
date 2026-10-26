@@ -20,7 +20,7 @@ it('auto-discovers page blocks implementing the PageBlock interface', function (
         ->and(BlockRegistry::getView('rich_text'))->toBe('blocks.rich-text');
 
     $allSchemas = BlockRegistry::all();
-    expect($allSchemas)->toHaveCount(9)
+    expect($allSchemas)->toHaveCount(10)
         ->and($allSchemas)->each->toBeInstanceOf(Block::class)
         ->and(collect($allSchemas)->map(fn (Block $b) => $b->getName()))->toContain('rich_text');
 });
