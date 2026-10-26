@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Blocks\BlockRegistry;
 use App\Filament\Resources\PageResource\Pages;
 use App\Models\Page;
+use App\Services\ImageOptimizer;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
@@ -88,7 +89,10 @@ class PageResource extends Resource
                                         ->disk('public')
                                         ->directory('seo')
                                         ->image()
-                                        ->maxSize(2048),
+                                        ->maxSize(2048)
+                                        ->saveUploadedFileUsing(function ($file) {
+                                            return ImageOptimizer::optimizeAndStore($file, 'seo', 1600);
+                                        }),
                                 ]),
                         ])
                             ->columnSpan(['lg' => 2]),

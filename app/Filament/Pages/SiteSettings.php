@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\SiteSetting;
+use App\Services\ImageOptimizer;
 use App\Services\TelegramNotifier;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Actions\Action as FormAction;
@@ -70,7 +71,10 @@ class SiteSettings extends Page implements HasForms
                                             ->disk('public')
                                             ->directory('branding')
                                             ->image()
-                                            ->maxSize(2048),
+                                            ->maxSize(2048)
+                                            ->saveUploadedFileUsing(function ($file) {
+                                                return ImageOptimizer::optimizeAndStore($file, 'branding', 800);
+                                            }),
                                         FileUpload::make('favicon')
                                             ->label('Favicon')
                                             ->disk('public')
@@ -203,6 +207,10 @@ class SiteSettings extends Page implements HasForms
                                     ->label('Google Analytics Measurement ID')
                                     ->placeholder('G-XXXXXXXXXX')
                                     ->maxLength(255),
+                                Toggle::make('discourage_indexing')
+                                    ->label('Discourage search engines from indexing this site (noindex)')
+                                    ->helperText('Sets robots meta to noindex and blocks crawlers in robots.txt. Useful for staging environments.')
+                                    ->default(false),
                                 TextInput::make('telegram_bot_token')
                                     ->label('Telegram Bot Token')
                                     ->password()

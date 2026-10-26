@@ -42,6 +42,8 @@
                                         src="{{ $cover }}"
                                         alt="{{ $project->title }}"
                                         loading="lazy"
+                                        width="600"
+                                        height="375"
                                         class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                                     />
                                 @else

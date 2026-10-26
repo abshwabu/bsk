@@ -1,13 +1,4 @@
-<x-layouts.site :title="($project->seo_title ?: $project->title) . ' - ' . site_name()">
-    @push('head')
-        @if ($project->seo_description)
-            <meta name="description" content="{{ $project->seo_description }}">
-        @endif
-        @if ($og = $project->ogImageUrl())
-            <meta property="og:image" content="{{ $og }}">
-        @endif
-    @endpush
-
+<x-layouts.site :project="$project">
     <article class="py-16 md:py-24" x-data="{ open: false, activeImage: '', activeAlt: '' }">
         <div class="mx-auto max-w-4xl px-6">
             {{-- Breadcrumb / Back Link --}}
@@ -71,6 +62,8 @@
                         src="{{ $cover }}"
                         alt="{{ $project->title }}"
                         loading="lazy"
+                        width="1200"
+                        height="675"
                         class="w-full object-cover max-h-[550px]"
                     />
                 </div>
@@ -100,6 +93,8 @@
                                     src="{{ $galleryUrl }}"
                                     alt="{{ $project->title }} gallery photo"
                                     loading="lazy"
+                                    width="400"
+                                    height="300"
                                     class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                                 />
                             </button>

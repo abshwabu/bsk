@@ -80,6 +80,8 @@
                                         src="{{ $cover }}"
                                         alt="{{ $product->name }}"
                                         loading="lazy"
+                                        width="400"
+                                        height="300"
                                         class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                                     />
                                 @else

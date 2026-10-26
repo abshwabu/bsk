@@ -29,6 +29,7 @@ class SiteSetting extends Model
             'social_links' => 'array',
             'extra_nav_links' => 'array',
             'show_powered_by' => 'boolean',
+            'discourage_indexing' => 'boolean',
             'enabled_modules' => 'array',
             'telegram_bot_token' => 'encrypted',
         ];
@@ -50,6 +51,7 @@ class SiteSetting extends Model
     public static function flushCache(): void
     {
         Cache::forget(self::CACHE_KEY);
+        Cache::forget('sitemap.xml');
     }
 
     /**
@@ -110,6 +112,7 @@ class SiteSetting extends Model
             'extra_nav_links' => [],
             'footer_text' => '© '.date('Y').' '.$appName.'. All rights reserved.',
             'show_powered_by' => true,
+            'discourage_indexing' => false,
             'analytics_id' => null,
             'telegram_bot_token' => null,
             'telegram_chat_id' => null,

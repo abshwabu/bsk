@@ -25,7 +25,7 @@
                                     <div class="flex items-center gap-4">
                                         <div class="h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
                                             @if (! empty($item['image']))
-                                                <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}" class="h-full w-full object-cover">
+                                                <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}" loading="lazy" width="80" height="80" class="h-full w-full object-cover">
                                             @else
                                                 <div class="flex h-full w-full items-center justify-center text-slate-400">
                                                     <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">

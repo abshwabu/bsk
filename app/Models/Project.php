@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\HasSeo;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class Project extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSeo;
 
     protected $guarded = ['id'];
 
@@ -23,6 +25,17 @@ class Project extends Model
             'is_published' => 'boolean',
             'sort' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            Cache::forget('sitemap.xml');
+        });
+
+        static::deleted(function () {
+            Cache::forget('sitemap.xml');
+        });
     }
 
     public function category(): BelongsTo

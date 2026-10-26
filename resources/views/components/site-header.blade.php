@@ -9,7 +9,7 @@
         {{-- Brand Logo / Site Name --}}
         <a href="{{ url('/') }}" class="flex items-center gap-3 font-heading text-xl font-bold tracking-tight text-primary transition hover:opacity-90">
             @if ($logo)
-                <img src="{{ $logo }}" alt="{{ $siteName }}" class="h-8 w-auto" />
+                <img src="{{ $logo }}" alt="{{ $siteName }}" width="120" height="32" class="h-8 w-auto" />
             @endif
             <span>{{ $siteName }}</span>
         </a>

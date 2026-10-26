@@ -1,8 +1,4 @@
-<x-layouts.site
-    title="{{ $product->seo_title ?: $product->name . ' - ' . site_name() }}"
-    description="{{ $product->seo_description ?: Str::limit(strip_tags($product->description), 160) }}"
-    image="{{ $product->og_image ? \Illuminate\Support\Facades\Storage::disk('public')->url($product->og_image) : $product->primaryImageUrl() }}"
->
+<x-layouts.site :product="$product">
     <div class="py-12 md:py-20">
         <div class="mx-auto max-w-7xl px-6">
             {{-- Breadcrumb Navigation --}}
@@ -45,6 +41,9 @@
                             <img
                                 :src="currentImage"
                                 alt="{{ $product->name }}"
+                                loading="lazy"
+                                width="800"
+                                height="600"
                                 class="h-full w-full object-cover transition duration-300"
                             />
                         </template>
@@ -67,7 +66,7 @@
                                     :class="currentImage === '{{ $img }}' ? 'ring-2 ring-primary border-transparent' : 'border-slate-200 hover:border-slate-400'"
                                     class="h-20 w-20 overflow-hidden rounded-xl border bg-slate-100 transition"
                                 >
-                                    <img src="{{ $img }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
+                                    <img src="{{ $img }}" alt="{{ $product->name }}" loading="lazy" width="80" height="80" class="h-full w-full object-cover">
                                 </button>
                             @endforeach
                         </div>
@@ -161,7 +160,7 @@
                             <article class="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition hover:shadow-md">
                                 <a href="{{ route('shop.show', $rel->slug) }}" class="aspect-[4/3] overflow-hidden bg-slate-100">
                                     @if ($relCover = $rel->primaryImageUrl())
-                                        <img src="{{ $relCover }}" alt="{{ $rel->name }}" loading="lazy" class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
+                                        <img src="{{ $relCover }}" alt="{{ $rel->name }}" loading="lazy" width="400" height="300" class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
                                     @endif
                                 </a>
                                 <div class="p-5 flex-1 flex flex-col justify-between">

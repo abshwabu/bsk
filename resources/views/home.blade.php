@@ -1,13 +1,4 @@
-<x-layouts.site :title="($page?->seo_title ?: $page?->title) ?? site_name()">
-    @push('head')
-        @if ($page?->seo_description)
-            <meta name="description" content="{{ $page->seo_description }}">
-        @endif
-        @if ($page?->ogImageUrl())
-            <meta property="og:image" content="{{ $page->ogImageUrl() }}">
-        @endif
-    @endpush
-
+<x-layouts.site :page="$page">
     @if ($page && ! empty($page->blocks))
         <article>
             <x-blocks :page="$page" />

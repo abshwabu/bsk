@@ -2,6 +2,15 @@
     'header' => null,
     'footer' => null,
     'title' => null,
+    'description' => null,
+    'image' => null,
+    'canonical' => null,
+    'noindex' => false,
+    'model' => null,
+    'page' => null,
+    'project' => null,
+    'product' => null,
+    'breadcrumbs' => null,
 ])
 
 <!DOCTYPE html>
@@ -10,7 +19,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? site_name() }}</title>
+
+    @include('partials.seo', array_filter([
+        'title' => $title,
+        'description' => $description,
+        'image' => $image,
+        'canonical' => $canonical,
+        'noindex' => $noindex,
+        'model' => $model,
+        'page' => $page,
+        'project' => $project,
+        'product' => $product,
+        'breadcrumbs' => $breadcrumbs,
+    ], fn ($v) => $v !== null))
 
     @if ($favicon = site()->faviconUrl())
         <link rel="icon" href="{{ $favicon }}">

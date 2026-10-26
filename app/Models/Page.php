@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use App\Services\Navigation;
+use App\Traits\HasSeo;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class Page extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSeo;
 
     protected $guarded = ['id'];
 
@@ -43,10 +45,12 @@ class Page extends Model
 
         static::saved(function () {
             Navigation::flushCache();
+            Cache::forget('sitemap.xml');
         });
 
         static::deleted(function () {
             Navigation::flushCache();
+            Cache::forget('sitemap.xml');
         });
     }
 

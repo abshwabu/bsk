@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\InquiryController;
+use App\Http\Controllers\SeoController;
 use App\Http\Controllers\ShopController;
 use App\Models\Page;
 use App\Models\Project;
@@ -125,6 +126,10 @@ Route::post('/checkout', [ShopController::class, 'submitCheckout'])
     ->middleware('throttle:5,60')
     ->name('shop.checkout.submit');
 Route::get('/order-confirmed/{reference}', [ShopController::class, 'orderConfirmed'])->name('shop.order-confirmed');
+
+// SEO routes
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
 
 // Dynamic CMS page route
 Route::get('/{slug}', function (string $slug) use ($canPreviewUnpublished) {
