@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InquiryController;
 use App\Models\Page;
 use App\Models\Project;
 use App\Models\ProjectCategory;
@@ -95,6 +96,11 @@ Route::prefix('projects')->name('projects.')->group(function () use ($canPreview
         ]);
     })->name('show');
 });
+
+// Inquiry form submission (5 requests / hour / IP)
+Route::post('/inquiry', [InquiryController::class, 'store'])
+    ->middleware('throttle:5,60')
+    ->name('inquiry.store');
 
 // Dynamic CMS page route
 Route::get('/{slug}', function (string $slug) use ($canPreviewUnpublished) {

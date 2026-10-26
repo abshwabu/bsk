@@ -3,7 +3,10 @@
 namespace App\Filament\Pages;
 
 use App\Models\SiteSetting;
+use App\Services\TelegramNotifier;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Actions\Action as FormAction;
+use Filament\Forms\Components\Actions as FormActions;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
@@ -208,6 +211,13 @@ class SiteSettings extends Page implements HasForms
                                 TextInput::make('telegram_chat_id')
                                     ->label('Telegram Chat ID')
                                     ->maxLength(255),
+                                FormActions::make([
+                                    FormAction::make('send_test_telegram')
+                                        ->label('Send test message')
+                                        ->icon('heroicon-o-paper-airplane')
+                                        ->color('primary')
+                                        ->action('sendTestTelegram'),
+                                ]),
                             ]),
 
                         Tab::make('Modules')
@@ -240,6 +250,40 @@ class SiteSettings extends Page implements HasForms
             ->title('Site settings saved successfully.')
             ->success()
             ->send();
+    }
+
+    public function sendTestTelegram(): void
+    {
+        $setting = SiteSetting::singleton();
+        $token = $this->data['telegram_bot_token'] ?? $setting->telegram_bot_token;
+        $chatId = $this->data['telegram_chat_id'] ?? $setting->telegram_chat_id;
+
+        if (empty($token) || empty($chatId)) {
+            Notification::make()
+                ->title('Missing Telegram Credentials')
+                ->body('Please provide both a Telegram Bot Token and Chat ID.')
+                ->warning()
+                ->send();
+
+            return;
+        }
+
+        $notifier = new TelegramNotifier($token, $chatId);
+        $sent = $notifier->sendTestMessage();
+
+        if ($sent) {
+            Notification::make()
+                ->title('Test message sent successfully!')
+                ->body('Check your Telegram chat to confirm delivery.')
+                ->success()
+                ->send();
+        } else {
+            Notification::make()
+                ->title('Failed to send test message')
+                ->body('Telegram API rejected the request or could not connect. Check token, chat ID, and logs.')
+                ->danger()
+                ->send();
+        }
     }
 
     protected function getFormActions(): array
